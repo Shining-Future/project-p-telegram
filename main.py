@@ -34,14 +34,14 @@ TEXT, MEDIA, OTHER = range(3)
 PREFIX_SOURCE = 'input'
 PREFIX_TARGET = 'output'
 SUFFIX_TARGET = 'output'
-PATH_MODEL = '../project-p-assets/models/yolov5s-no-nms-2022-07-07-best.onnx'
+PATH_MODEL = 'models/yolov5s-no-nms-2022-07-07-best.onnx'
 
 makedirs(PREFIX_SOURCE, exist_ok=True)
 makedirs(PREFIX_TARGET, exist_ok=True)
 
-inference_onnx = InferenceONNX(PATH_MODEL)
 lock = Lock()
 log = LogStub()
+inference_onnx = InferenceONNX(PATH_MODEL, log=log)
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
