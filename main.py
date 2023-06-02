@@ -91,8 +91,11 @@ async def photo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         percentile = round(get_percentile(boxes_image, 95))
         stats_target = f"Detected {percentile} objects in " \
                        f"{times_image['total']:.3f} sec"
-        await update.message.reply_photo(path_target, caption=stats_target,
-                                         reply_to_message_id=message_id)
+        if len(boxes_image):
+            await update.message.reply_photo(path_target, caption=stats_target,
+                                             reply_to_message_id=message_id)
+        else:
+            log.warning(f"Skipping '{path_target}'")
 
     return MEDIA
 
