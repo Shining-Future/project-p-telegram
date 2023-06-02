@@ -71,28 +71,31 @@ async def photo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     message_id = update.message.id
 
     for i, photo_ in enumerate(update.message.photo):
-        file_photo = await photo_.get_file()
-        filename_source = osp.join(
-            PREFIX_SOURCE,
-            f"{chat_id:012d}.{message_id:06d}.{i:03d}.{user_name}.jpg"
-        )
-        path_target = osp.join(PREFIX_TARGET, osp.basename(
-            f"{osp.splitext(filename_source)[0]}.{SUFFIX_TARGET}.jpg"
-        ))
-        await file_photo.download_to_drive(filename_source)
-        log.info(f"Photo of {user_object.username}: {filename_source}")
-        async with lock:
-            boxes_image, _, times_image = inference_onnx.process_image(
-                filename_source,
-                prefix_target=PREFIX_TARGET,
-                suffix_target=SUFFIX_TARGET,
-                feedback=None  # TODO: interrupt
+        try:
+            file_photo = await photo_.get_file()
+            filename_source = osp.join(
+                PREFIX_SOURCE,
+                f"{chat_id:012d}.{message_id:06d}.{i:03d}.{user_name}.jpg"
             )
-        percentile = round(get_percentile(boxes_image, 95))
-        stats_target = f"Detected {percentile} objects in " \
-                       f"{times_image['total']:.3f} sec"
-        await update.message.reply_photo(path_target, caption=stats_target,
-                                         reply_to_message_id=message_id)
+            path_target = osp.join(PREFIX_TARGET, osp.basename(
+                f"{osp.splitext(filename_source)[0]}.{SUFFIX_TARGET}.jpg"
+            ))
+            await file_photo.download_to_drive(filename_source)
+            log.info(f"Photo of {user_object.username}: {filename_source}")
+            async with lock:
+                boxes_image, _, times_image = inference_onnx.process_image(
+                    filename_source,
+                    prefix_target=PREFIX_TARGET,
+                    suffix_target=SUFFIX_TARGET,
+                    feedback=None  # TODO: interrupt
+                )
+            percentile = round(get_percentile(boxes_image, 95))
+            stats_target = f"Detected {percentile} objects in " \
+                           f"{times_image['total']:.3f} sec"
+            await update.message.reply_photo(path_target, caption=stats_target,
+                                             reply_to_message_id=message_id)
+        except AssertionError:
+            ...
 
     return MEDIA
 
@@ -164,6 +167,7 @@ def main():
     # handler_video = MessageHandler(filters.VIDEO, video)
 
     application.add_handler(handler_conversation)
+    # application.add_error_handler()  # TODO: implement if try..except fails
 
     # Run the bot until the user presses Ctrl-C
     application.run_polling()
