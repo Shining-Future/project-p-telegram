@@ -104,7 +104,10 @@ async def video(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
 
     for i, video_ in enumerate(update.message.video):
         file_video = await video_.get_file()
-        filename_source = f"{chat_id}.{message_id}.{i:03d}.{user_name}.mp4"
+        filename_source = osp.join(
+            PREFIX_SOURCE,
+            f"{chat_id}.{message_id}.{i:03d}.{user_name}.mp4"
+        )
         path_target = osp.join(PREFIX_TARGET, osp.basename(
             f"{osp.splitext(filename_source)[0]}.{SUFFIX_TARGET}.mp4"
         ))
