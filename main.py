@@ -46,12 +46,14 @@ log = LogStub()
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Starts the conversation and asks the user for media to inference"""
-    reply_keyboard = [["Ok"]]
+    reply_keyboard = [["/stop"]]
 
     await update.message.reply_text(
-        "Welcome! This is Project P Bot. Send photo(s) or video(s) "
-        "in order to detect pelicans. Send /cancel to stop processing (WIP).\n\n"
-        "[Attached media up to 20 MiB is supported]",
+        "Welcome! This is Project P Bot. Send photo(s) or video(s) within the "
+        "conversation in order to detect pelicans. Send /stop to stop "
+        "processing (WIP).\n\n"
+        "[Attached media up to 20 MiB is supported]"
+        "[Do not send photos and videos in one message]",
         reply_markup=ReplyKeyboardMarkup(
             reply_keyboard, one_time_keyboard=True,
             input_field_placeholder="Photo or video"
@@ -130,12 +132,13 @@ async def video(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     return MEDIA
 
 
-async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+async def stop(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Cancels and ends the conversation."""
     user_object = update.message.from_user
     log.info(f"User {user_object.first_name} canceled the conversation.")
     await update.message.reply_text(
-        "Bye! I hope we can talk again some day.", reply_markup=ReplyKeyboardRemove()
+        "Stop! Send /start to begin conversation again.",
+        reply_markup=ReplyKeyboardRemove()
     )
 
     return ConversationHandler.END
@@ -155,7 +158,7 @@ def main():
             MEDIA: [MessageHandler(filters.PHOTO, photo),
                     MessageHandler(filters.VIDEO, video)],
         },
-        fallbacks=[CommandHandler("cancel", cancel)],
+        fallbacks=[CommandHandler("stop", stop)],
     )
     # handler_photo = MessageHandler(filters.PHOTO, photo)
     # handler_video = MessageHandler(filters.VIDEO, video)
