@@ -70,7 +70,10 @@ async def photo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
 
     for i, photo_ in enumerate(update.message.photo):
         file_photo = await photo_.get_file()
-        filename_source = f"{chat_id}.{message_id}.{i:03d}.{user_name}.jpg"
+        filename_source = osp.join(
+            PREFIX_SOURCE,
+            f"{chat_id}.{message_id}.{i:03d}.{user_name}.jpg"
+        )
         path_target = osp.join(PREFIX_TARGET, osp.basename(
             f"{osp.splitext(filename_source)[0]}.{SUFFIX_TARGET}.jpg"
         ))
