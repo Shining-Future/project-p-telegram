@@ -1,2 +1,2 @@
 python-telegram-bot==20.3
-git+https://github.com/Shining-Future/project-p-inference.git@c8d5553be4d2ab9c622ff76ff8cd25e986651d00#egg=projectp
+-e git+https://github.com/Shining-Future/project-p-inference.git@master#egg=projectp
