@@ -46,7 +46,7 @@ inference_onnx = InferenceONNX(PATH_MODEL, log=log)
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Starts the conversation and asks the user for media to inference"""
-    reply_keyboard = [["/stop"]]
+    # reply_keyboard = [["/stop"]]
 
     await update.message.reply_text(
         "Welcome! This is Project P Bot. Send photo(s) or video(s) within the "
@@ -54,10 +54,10 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         "processing (WIP).\n\n"
         "[Attached media up to 20 MiB is supported]"
         "[Do not send photos and videos in one message]",
-        reply_markup=ReplyKeyboardMarkup(
-            reply_keyboard, one_time_keyboard=True,
-            input_field_placeholder="Photo or video"
-        ),
+        # reply_markup=ReplyKeyboardMarkup(
+        #     reply_keyboard, one_time_keyboard=True,
+        #     input_field_placeholder="Photo or video"
+        # ),
     )
 
     return MEDIA
