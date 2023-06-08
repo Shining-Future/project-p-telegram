@@ -133,6 +133,7 @@ async def video(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
             filename_source,
             prefix_target=PREFIX_TARGET,
             suffix_target=SUFFIX_TARGET,
+            codec='x264',
             progress=False,
             feedback=None  # TODO: interrupt
         )
