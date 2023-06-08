@@ -115,7 +115,7 @@ async def video(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
 
     # for i, video_ in enumerate(update.message.video):
     # i = len(update.message.video)
-    video_ = update.message.video  # [-1]
+    video_ = update.message.video or update.message.animation
     file_video = await video_.get_file()
     name, ext = osp.splitext(video_.file_name)
     filename_source = osp.join(
