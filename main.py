@@ -117,9 +117,10 @@ async def video(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     # i = len(update.message.video)
     video_ = update.message.video  # [-1]
     file_video = await video_.get_file()
+    name, ext = osp.splitext(video_.file_name)
     filename_source = osp.join(
         PREFIX_SOURCE,
-        f"{chat_id:012d}.{message_id:06d}.{video_.file_id}.{user_name}.mp4"
+        f"{chat_id:012d}.{message_id:06d}.{name}.{user_name}.{ext}"
     )
     path_target = osp.join(PREFIX_TARGET, osp.basename(
         f"{osp.splitext(filename_source)[0]}.{SUFFIX_TARGET}.mp4"
@@ -177,7 +178,7 @@ def main():
         entry_points=[CommandHandler("start", start)],
         states={
             MEDIA: [MessageHandler(filters.PHOTO, photo),
-                    MessageHandler(filters.VIDEO, video)],
+                    MessageHandler(filters.VIDEO | filters.ANIMATION, video)],
         },
         fallbacks=[CommandHandler("stop", stop)],
     )
