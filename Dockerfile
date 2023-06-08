@@ -5,8 +5,9 @@ COPY requirements.txt /tmp
 WORKDIR /usr
 
 RUN apt update && apt install -y --no-install-recommends --no-install-suggests \
-    build-essential git ffmpeg x264 && rm -rf /var/lib/apt/lists/* && \
-    pip install -r /tmp/requirements.txt
+    build-essential git ffmpeg python3-opencv x264 && \
+    pip install -r /tmp/requirements.txt && \
+    apt purge --autoremove build-essential git && rm -rf /var/lib/apt/lists/*
 
 RUN addgroup --gid 1000 projectp && \
     adduser --uid 1000 --gid 1000 --home /opt/projectp --shell /bin/bash \
