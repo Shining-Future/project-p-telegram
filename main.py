@@ -114,17 +114,17 @@ async def video(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     log.debug(f"Message {message_id} from {chat_id} with video by {user_name}")
 
     # for i, video_ in enumerate(update.message.video):
-    i = len(update.message.video)
-    video_ = update.message.video[-1]
+    # i = len(update.message.video)
+    video_ = update.message.video  # [-1]
     file_video = await video_.get_file()
     filename_source = osp.join(
         PREFIX_SOURCE,
-        f"{chat_id:012d}.{message_id:06d}.{i:03d}.{user_name}.mp4"
+        f"{chat_id:012d}.{message_id:06d}.{video_.file_id}.{user_name}.mp4"
     )
     path_target = osp.join(PREFIX_TARGET, osp.basename(
         f"{osp.splitext(filename_source)[0]}.{SUFFIX_TARGET}.mp4"
     ))
-    log.debug(f"Start downloading {filename_source}...")
+    log.debug(f"Start downloading {video_.file_name} --> {filename_source}...")
     await file_video.download_to_drive(filename_source)
     log.info(f"Video of {user_object.username}: {filename_source}")
     async with lock:
