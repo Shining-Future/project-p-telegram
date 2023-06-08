@@ -106,10 +106,12 @@ async def photo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
 
 async def video(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Stores the video(s) and starts inference"""
+    log.debug(f"Beginning of video callback <--")
     user_object = update.message.from_user
     user_name = user_object.username
     chat_id = update.message.chat_id
     message_id = update.message.id
+    log.debug(f"Message {message_id} from {chat_id} with video by {user_name}")
 
     # for i, video_ in enumerate(update.message.video):
     i = len(update.message.video)
@@ -122,6 +124,7 @@ async def video(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     path_target = osp.join(PREFIX_TARGET, osp.basename(
         f"{osp.splitext(filename_source)[0]}.{SUFFIX_TARGET}.mp4"
     ))
+    log.debug(f"Start downloading {filename_source}...")
     await file_video.download_to_drive(filename_source)
     log.info(f"Video of {user_object.username}: {filename_source}")
     async with lock:
