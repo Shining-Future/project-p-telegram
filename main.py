@@ -52,12 +52,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         "Welcome! This is Project P Bot. Send photo(s) or video(s) within the "
         "conversation in order to detect pelicans. Send /stop to stop "
         "processing (WIP).\n\n"
-        "[Attached media up to 20 MiB is supported]"
-        "[Do not send photos and videos in one message]",
-        # reply_markup=ReplyKeyboardMarkup(
-        #     reply_keyboard, one_time_keyboard=True,
-        #     input_field_placeholder="Photo or video"
-        # ),
+        "[Please, do not send photos and videos in one message]\n"
+        "[Attached media up to 20 MiB is supported]",
     )
 
     return MEDIA
