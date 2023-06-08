@@ -120,7 +120,7 @@ async def video(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     name, ext = osp.splitext(video_.file_name)
     filename_source = osp.join(
         PREFIX_SOURCE,
-        f"{chat_id:012d}.{message_id:06d}.{name}.{user_name}.{ext}"
+        f"{chat_id:012d}.{message_id:06d}.{name}.{user_name}{ext}"
     )
     path_target = osp.join(PREFIX_TARGET, osp.basename(
         f"{osp.splitext(filename_source)[0]}.{SUFFIX_TARGET}.mp4"
