@@ -66,7 +66,6 @@ async def photo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     chat_id = update.message.chat_id
     message_id = update.message.id
 
-    # for i, photo_ in enumerate(update.message.photo):
     i = len(update.message.photo)
     photo_ = update.message.photo[-1]
     file_photo = await photo_.get_file()
@@ -102,15 +101,11 @@ async def photo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
 
 async def video(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Stores the video(s) and starts inference"""
-    log.debug(f"Beginning of video callback <--")
     user_object = update.message.from_user
     user_name = user_object.username
     chat_id = update.message.chat_id
     message_id = update.message.id
-    log.debug(f"Message {message_id} from {chat_id} with video by {user_name}")
 
-    # for i, video_ in enumerate(update.message.video):
-    # i = len(update.message.video)
     video_ = update.message.video or update.message.animation
     file_video = await video_.get_file()
     name, ext = osp.splitext(video_.file_name)
@@ -121,7 +116,6 @@ async def video(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     path_target = osp.join(PREFIX_TARGET, osp.basename(
         f"{osp.splitext(filename_source)[0]}.{SUFFIX_TARGET}.mp4"
     ))
-    log.debug(f"Start downloading {video_.file_name} --> {filename_source}...")
     await file_video.download_to_drive(filename_source)
     log.info(f"Video of {user_object.username}: {filename_source}")
     async with lock:
@@ -159,8 +153,8 @@ async def stop(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     return ConversationHandler.END
 
 
-async def error(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    ...
+# async def error(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+#     ...
 
 
 def main():
@@ -183,7 +177,7 @@ def main():
     # handler_video = MessageHandler(filters.VIDEO, video)
 
     application.add_handler(handler_conversation)
-    application.add_error_handler(error)  # TODO: implement if try..except fails
+    # application.add_error_handler(error)  # TODO: implement if try..except fails
 
     # Run the bot until the user presses Ctrl-C
     application.run_polling()
