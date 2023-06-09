@@ -1,15 +1,15 @@
-FROM python:3.10.10-slim
+FROM continuumio/miniconda3:23.3.1-0
 
 COPY requirements.txt /tmp
-#ADD https://anaconda.org/conda-forge/openh264/2.1.1/download/linux-64/openh264-2.1.1-h780b84a_0.tar.bz2 /tmp
 
 WORKDIR /usr
 
 RUN apt update && apt install -y --no-install-recommends --no-install-suggests \
-    build-essential curl git && pip install -r /tmp/requirements.txt && \
-    curl -JOLk https://anaconda.org/conda-forge/openh264/2.1.1/download/linux-64/openh264-2.1.1-h780b84a_0.tar.bz2 /tmp && \
-    pip install --local /tmp/linux-64/openh264-2.1.1-h780b84a_0.tar.bz2 && \
-    apt purge -y --autoremove build-essential curl git && \
+    build-essential git libgl1-mesa-glx && \
+    conda install -y -c conda-forge filetype matplotlib onnxruntime openh264 \
+    pandas py-opencv python-telegram-bot tqdm && \
+    pip install -r /tmp/requirements.txt ensemble-boxes==1.0.9 && \
+    apt purge -y --autoremove build-essential git && \
     rm -rf /var/lib/apt/lists/*
 
 RUN addgroup --gid 1000 projectp && \
@@ -23,6 +23,6 @@ WORKDIR /opt/projectp
 COPY --chown=projectp:projectp main.py ./
 COPY --chown=projectp:projectp models ./models/
 
-ENTRYPOINT ["/usr/local/bin/python"]
+ENTRYPOINT ["/opt/conda/bin/python"]
 
 CMD ["/opt/projectp/main.py"]
